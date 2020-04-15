@@ -8,10 +8,11 @@ from rest_framework.response import Response
 # Create your views here.
 # https://www.youtube.com/watch?v=ekhUhignYTU&list=PL1WVjBsN-_NJ4urkLt7iVDocVu_ZQgVzF&index=7
 class ArticleViewSet(ViewSet):
-    authentication_classes = [BasicAuthentication]
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get_article(self, request):
+        print('Get article for user. {}'.format(request.user))
         return Response('user got articles.')
 
     def get_list_of_article(self, request):

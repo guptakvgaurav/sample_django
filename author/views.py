@@ -10,6 +10,3 @@ class AuthorViewSet(ViewSet):
 
     def get_my_details(self):
         return
-
-    def login(self):
-        return

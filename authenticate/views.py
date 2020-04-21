@@ -40,9 +40,11 @@ class LoginViewSet(ViewSet):
         ser_req = LoginSerializer(data=request.data)
         if not ser_req.is_valid():
             return JsonResponse({'message': 'Not valid input'})
-
-        print('User found !! {}'.format(user))
-        token, _ = AuthenticationService.login(request.data, request)
+        try:
+            token, _ = AuthenticationService.login(request.data, request)
+        except Exception as e:
+            return Response({'message': 'Invalid credentials',
+                             'details': str(e)})
         return Response({'token': token.key})
 
 

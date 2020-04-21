@@ -131,4 +131,6 @@ STATIC_URL = '/static/'
 # 'USER': os.environ.get('SAMPLE_DJANGO_DB_USER'),
 # 'PASSWORD': os.environ.get('SAMPLE_DJANGO_DB_PASSWORD')
 
-# AUTH_USER_MODEL = 'core.User'
+AUTH_USER_MODEL = 'core.User'
+
+AUTHENTICATION_BACKEND = ['django.contrib.auth.backends.ModelBackend']

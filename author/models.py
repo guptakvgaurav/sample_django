@@ -38,7 +38,7 @@ class Author(models.Model):
     )
 
     def __str__(self):
-        return str(self.user.username)
+        return str(self.user)
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)

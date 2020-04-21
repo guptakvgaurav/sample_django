@@ -4,12 +4,13 @@ from rest_condition import And, Or
 from rest_framework.authentication import TokenAuthentication
 from django.http import JsonResponse
 from .permissions import IsSuperAdmin, IsAuthor
+from authenticate.authentication import BearerTokenAuthentication
 
 
 # Create your views here.
 class AuthorViewSet(ViewSet):
 
-    authentication_classes = [TokenAuthentication, ]
+    authentication_classes = [BearerTokenAuthentication, ]
     permission_classes = [Or(And(IsAuthenticated, IsAuthor), IsSuperAdmin)]
 
     def create_author(self):

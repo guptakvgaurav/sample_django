@@ -7,6 +7,7 @@ from .serializers import SignupSerializer, LoginSerializer
 from .service import AuthenticationService
 # from core.serializers import UserSerializer
 from django.forms.models import model_to_dict
+from .authentication import BearerTokenAuthentication
 
 
 class SignupViewSet(ViewSet):
@@ -53,7 +54,7 @@ class LoginViewSet(ViewSet):
 
 class LogoutViewSet(ViewSet):
 
-    authentication_classes = (TokenAuthentication, )
+    authentication_classes = (BearerTokenAuthentication, )
     permission_classes = [IsAuthenticated]
 
     @csrf_exempt

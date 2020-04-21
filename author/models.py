@@ -1,9 +1,8 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-import random
+# from django.db.models.signals import post_save
+# from django.dispatch import receiver
 
 
 # Create your models here.
@@ -41,9 +40,9 @@ class Author(models.Model):
         return str(self.user)
 
 
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_profile_for_new_user(sender, created, instance, **kwargs):
-    if created:
-        author_profile = Author(user=instance)
-        print('########## Author profile - {}'.format(author_profile))
-        author_profile.save()
+# @receiver(post_save, sender=settings.AUTH_USER_MODEL)
+# def create_profile_for_new_user(sender, created, instance, **kwargs):
+#     if created:
+#         author_profile = Author(user=instance)
+#         print('########## Author profile - {}'.format(author_profile))
+#         author_profile.save()

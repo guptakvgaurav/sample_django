@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
+from author.models import Author
 
 
 class AuthenticationService(object):
@@ -8,16 +9,16 @@ class AuthenticationService(object):
     @classmethod
     def register(cls, user_data):
         User = get_user_model()
-        new_user = User.objects.create_superuser(email=user_data.get('email'),
-                                                 first_name=user_data.get('first_name'),
-                                                 last_name=user_data.get('last_name'),
-                                                 password=user_data.get('password'),
-                                                 is_staff=True,
-                                                 is_superuser=True)
+        new_user = User.objects.create_user(email=user_data.get('email'),
+                                            first_name=user_data.get('first_name'),
+                                            last_name=user_data.get('last_name'),
+                                            password=user_data.get('password'),
+                                            is_staff=True)
         token, created = Token.objects.get_or_create(user=new_user)
-        print('Returning token. {}'.format(token))
 
-        return token, new_user
+        print('Returning token. {}'.format(token))
+        author = Author(skills=user_data.get('skills'))
+        return token, new_user, author
 
     @classmethod
     def login(cls, user_data, request):

@@ -1,17 +1,12 @@
-from django.shortcuts import render
 from rest_framework.viewsets import ViewSet
-from django.contrib.auth import login as django_login, logout as django_logout
-from rest_framework.authtoken.models import Token
-from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 from django.http import JsonResponse
 from .serializers import SignupSerializer, LoginSerializer
 from .service import AuthenticationService
-from core.serializers import UserSerializer
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
+# from core.serializers import UserSerializer
+from django.forms.models import model_to_dict
 
 
 class SignupViewSet(ViewSet):
@@ -24,12 +19,20 @@ class SignupViewSet(ViewSet):
             return JsonResponse({'message': 'Not valid input'})
 
         # process input.
-        token, user = AuthenticationService.register(request.data)
+        token, user, profile = AuthenticationService.register(request.data)
 
         # transform result
-        serialized_user = UserSerializer(user)
+        # serialized_user = UserSerializer(user)
 
-        return JsonResponse(serialized_user.data, safe=True)
+        token_dict = model_to_dict(token)
+        profile_dict = model_to_dict(profile)
+        user_dict = model_to_dict(user)
+
+        return JsonResponse({
+            'user': user_dict,
+            'profile': profile_dict,
+            'token': token_dict
+        }, safe=True)
 
 
 class LoginViewSet(ViewSet):
@@ -43,9 +46,9 @@ class LoginViewSet(ViewSet):
         try:
             token, _ = AuthenticationService.login(request.data, request)
         except Exception as e:
-            return Response({'message': 'Invalid credentials',
-                             'details': str(e)})
-        return Response({'token': token.key})
+            return JsonResponse({'message': 'Invalid credentials',
+                                 'details': str(e)})
+        return JsonResponse({'token': token.key})
 
 
 class LogoutViewSet(ViewSet):
@@ -56,5 +59,5 @@ class LogoutViewSet(ViewSet):
     @csrf_exempt
     def post(self, request):
         AuthenticationService.logout(request.user)
-        return Response({'message': 'You have been logged out.'})
+        return JsonResponse({'message': 'You have been logged out.'})
 

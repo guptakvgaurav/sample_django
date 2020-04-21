@@ -6,6 +6,15 @@ def f(**kwargs):
     return kwargs
 
 
+AUTHOR = 1
+REVIEWER = 2
+
+ROLE_CHOICES = (
+    (AUTHOR, 'AUTHOR'),
+    (REVIEWER, 'REVIEWER'),
+)
+
+
 class UserManager(BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
@@ -32,6 +41,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES, blank=True, default=AUTHOR)
 
     objects = UserManager()
 

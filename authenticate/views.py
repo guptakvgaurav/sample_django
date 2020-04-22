@@ -8,6 +8,10 @@ from .service import AuthenticationService
 # from core.serializers import UserSerializer
 from django.forms.models import model_to_dict
 from .authentication import BearerTokenAuthentication
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class SignupViewSet(ViewSet):
@@ -15,8 +19,11 @@ class SignupViewSet(ViewSet):
     @csrf_exempt
     def post(self, request):
         # validate input
+        logger.info('Serializing input for validation.')
+
         ser_req = SignupSerializer(data=request.data)
         if not ser_req.is_valid():
+            logger.warning('Request is not valid.')
             return JsonResponse({'message': 'Not valid input'})
 
         # process input.

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from pathlib import Path
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -134,3 +135,37 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'core.User'
 
 AUTHENTICATION_BACKEND = ['django.contrib.auth.backends.ModelBackend']
+
+LOG_FILE_PATH = Path.cwd().joinpath('logs').joinpath('info.log')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console': {
+            'format': '%(levelname)-8s %(asctime)s %(name)-25s %(message)s'
+        },
+        'file': {
+            'format': '%(levelname)-8s %(asctime)s %(name)-25s %(message)s'
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'console'
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'formatter': 'file',
+            'filename': LOG_FILE_PATH,
+}
+    },
+    'loggers': {
+        '': {
+            'level': 'DEBUG',
+            'handlers': ['console', 'file']
+        }
+    }
+}

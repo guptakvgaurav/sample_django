@@ -3,9 +3,12 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from author.models import Author
 import logging
+from logpipe import Producer
+from author.serializers import KafkaAuthorSerializer
 
 
 logger = logging.getLogger(__name__)
+producer = Producer('test', KafkaAuthorSerializer)
 
 
 class AuthenticationService(object):
@@ -13,7 +16,7 @@ class AuthenticationService(object):
     @classmethod
     def register(cls, user_data):
         User = get_user_model()
-        logger.info('Creating user model.')
+        logger.error('Creating user model.')
         new_user = User.objects.create_user(email=user_data.get('email'),
                                             first_name=user_data.get('first_name'),
                                             last_name=user_data.get('last_name'),
@@ -23,7 +26,14 @@ class AuthenticationService(object):
         token, created = Token.objects.get_or_create(user=new_user)
 
         logger.info('Creating author profile for new user.')
-        author = Author(skills=user_data.get('skills'))
+        author = Author(user=new_user,
+                        skills=user_data.get('skills'))
+        author.save()
+        kafka_data = KafkaAuthorSerializer(author).data
+        logger.info('Kafka Author - {}'.format(kafka_data))
+        producer.send(author)
+
+        logger.info('Sending message to Kafka.')
         return token, new_user, author
 
     @classmethod

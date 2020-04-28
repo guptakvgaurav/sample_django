@@ -2,3 +2,5 @@ Django>=2.1.3,<2.2.0
 djangorestframework>=3.9.0,<3.10.0
 psycopg2-binary>=2.7.5,<2.8.0
 rest_condition==1.0.3
+django-logpipe==1.0.0
+kafka-python==2.0.0

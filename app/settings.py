@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'authenticate',
-    'core'
+    'core',
+    'logpipe'
 ]
 
 MIDDLEWARE = [
@@ -143,7 +144,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'console': {
-            'format': '%(levelname)-8s %(asctime)s %(name)-25s %(message)s'
+            'format': '%(levelname)-8s %(asctime)-10s %(name)-25s %(message)s'
         },
         'file': {
             'format': '%(levelname)-8s %(asctime)s %(name)-25s %(message)s'
@@ -160,7 +161,7 @@ LOGGING = {
             'class': 'logging.FileHandler',
             'formatter': 'file',
             'filename': LOG_FILE_PATH,
-}
+        }
     },
     'loggers': {
         '': {
@@ -168,4 +169,23 @@ LOGGING = {
             'handlers': ['console', 'file']
         }
     }
+}
+
+LOGPIPE = {
+    # Required Settings
+    'OFFSET_BACKEND': 'logpipe.backend.kafka.ModelOffsetStore',
+    'CONSUMER_BACKEND': 'logpipe.backend.kafka.Consumer',
+    'PRODUCER_BACKEND': 'logpipe.backend.kafka.Producer',
+    'KAFKA_BOOTSTRAP_SERVERS': [
+        'localhost:9092'
+    ],
+    'KAFKA_CONSUMER_KWARGS': {
+        'group_id': 'django-logpipe',
+    },
+
+    # Optional Settings
+    # 'KAFKA_SEND_TIMEOUT': 10,
+    # 'KAFKA_MAX_SEND_RETRIES': 0,
+    # 'MIN_MESSAGE_LAG_MS': 0,
+    # 'DEFAULT_FORMAT': 'json',
 }

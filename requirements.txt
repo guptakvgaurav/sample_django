@@ -1,6 +1,6 @@
 Django==2.1.15
 django-logpipe==1.0.0
-djangorestframework==3.9.4
+djangorestframework==3.11.2
 djangorestframework-stubs==1.1.0
 kafka-python==2.0.0
 lru-dict==1.1.6
